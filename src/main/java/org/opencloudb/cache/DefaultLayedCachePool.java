@@ -58,8 +58,7 @@ public class DefaultLayedCachePool implements LayerCachePool {
 			try {
 				pool = allCaches.get(cacheName);
 				if (pool == null) {
-					pool = this.createChildCache(cacheName,
-							this.defaultCacheSize, this.defaulExpiredSeconds);
+					pool = this.createChildCache(cacheName,this.defaultCacheSize, this.defaulExpiredSeconds);
 				}
 
 			} finally {
@@ -78,8 +77,7 @@ public class DefaultLayedCachePool implements LayerCachePool {
 	public CachePool createChildCache(String cacheName, int size,
 			int expireSeconds) {
 		LOGGER.info("create child Cache: " + cacheName+ " for layered cache "+name+ ", size "+size+", expire seconds "+expireSeconds);
-		CachePool child = this.poolFactory.createCachePool(name + "."
-				+ cacheName, size, expireSeconds);
+		CachePool child = this.poolFactory.createCachePool(name + "."+ cacheName, size, expireSeconds);
 		allCaches.put(cacheName, child);
 		return child;
 	}

@@ -22,6 +22,7 @@ public class ZkConfig {
     }
 
     public void initZk() {
+    	//加载ZK配置文件
         Properties pros = loadMyid();
 
         //disable load from zookeeper,use local file.
@@ -41,7 +42,8 @@ public class ZkConfig {
 
     public Properties loadMyid() {
         Properties pros = new Properties();
-
+        
+        //加载ZK配置文件
         try (InputStream configIS = ZookeeperLoader.class
             .getResourceAsStream(ZK_CONFIG_FILE_NAME)) {
             if (configIS == null) {
@@ -53,7 +55,8 @@ public class ZkConfig {
         } catch (IOException e) {
             throw new RuntimeException("can't find myid properties file : " + ZK_CONFIG_FILE_NAME);
         }
-
+        
+        //是否加载ZK
         if (Boolean.valueOf(pros.getProperty("loadZk"))) {
             //validate
             String zkURL = pros.getProperty("zkURL");

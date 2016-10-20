@@ -54,5 +54,4 @@ public abstract class AbstractPartitionAlgorithm implements RuleAlgorithm {
 			return null;
 		}
 	}
-	
 }

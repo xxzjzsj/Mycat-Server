@@ -101,10 +101,10 @@ public class MycatServer {
 	private ListeningExecutorService listeningExecutorService;
 
 	public MycatServer() {
+		//初始化Mycat配置
 		this.config = new MycatConfig();
 		this.timer = new Timer(NAME + "Timer", true);
-		this.sqlRecorder = new SQLRecorder(config.getSystem()
-				.getSqlRecordCount());
+		this.sqlRecorder = new SQLRecorder(config.getSystem().getSqlRecordCount());
 		this.isOnline = new AtomicBoolean(true);
 		cacheService = new CacheService();
 		routerService = new RouteService(cacheService);
@@ -182,7 +182,10 @@ public class MycatServer {
 	}
 
 	public void beforeStart() {
+		//获取home目录
 		String home = SystemConfig.getHomePath();
+		
+		//初始化配置并且监控配置文件的变化
 		Log4jInitializer.configureAndWatch(home + "/conf/log4j.xml", LOG_WATCH_DELAY);
 		
 		//ZkConfig.instance().initZk();
@@ -193,7 +196,7 @@ public class MycatServer {
 		SystemConfig system = config.getSystem();
 		int processorCount = system.getProcessors();
 
-		// server startup
+		// server startup 打印系统相关信息
 		LOGGER.info("===============================================");
 		LOGGER.info(NAME + " is ready to startup ...");
 		String inf = "Startup processors ...,total processors:"
@@ -209,20 +212,24 @@ public class MycatServer {
 		LOGGER.info("sysconfig params:" + system.toString());
 
 		// startup manager
+		//管理连接工厂
 		ManagerConnectionFactory mf = new ManagerConnectionFactory();
+		//服务端连接工厂
 		ServerConnectionFactory sf = new ServerConnectionFactory();
-		SocketAcceptor manager = null;
-		SocketAcceptor server = null;
+		//是否使用aio
 		aio = (system.getUsingAIO() == 1);
 
 		// startup processors
+		//初始化NIO
 		int threadPoolSize = system.getProcessorExecutor();
 		processors = new NIOProcessor[processorCount];
+		
 		long processBuferPool = system.getProcessorBufferPool();
 		int processBufferChunk = system.getProcessorBufferChunk();
 		int socketBufferLocalPercent = system.getProcessorBufferLocalPercent();
 		bufferPool = new BufferPool(processBuferPool, processBufferChunk,
 				socketBufferLocalPercent / processorCount);
+		//初始化线程池
 		businessExecutor = ExecutorUtil.create("BusinessExecutor",
 				threadPoolSize);
 		timerExecutor = ExecutorUtil.create("Timer", system.getTimerExecutor());
@@ -232,7 +239,10 @@ public class MycatServer {
 			processors[i] = new NIOProcessor("Processor" + i, bufferPool,
 					businessExecutor);
 		}
-
+		
+		SocketAcceptor manager = null;
+		SocketAcceptor server = null;
+		
 		if (aio) {
 			LOGGER.info("using aio network handler ");
 			asyncChannelGroups = new AsynchronousChannelGroup[processorCount];

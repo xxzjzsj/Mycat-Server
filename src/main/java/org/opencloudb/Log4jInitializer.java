@@ -41,7 +41,8 @@ public final class Log4jInitializer {
         xdog.setDelay(delay);
         xdog.start();
     }
-
+    
+    //监控到配置文件有变化的时候
     private static final class XMLWatchdog extends FileWatchdog {
 
         public XMLWatchdog(String filename) {

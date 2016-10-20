@@ -121,8 +121,7 @@ public class DynaClassLoader {
 		 * @throws IOException
 		 */
 		public Class<?> loadClass(String name) throws ClassNotFoundException {
-			if (name.startsWith("java") || name.startsWith("sun")
-					|| name.startsWith("org.opencloudb")) {
+			if (name.startsWith("java") || name.startsWith("sun") || name.startsWith("org.opencloudb")) {
 				return super.loadClass(name);
 			}
 			DynaClass dynaClass = loadedDynaClassMap.get(name);

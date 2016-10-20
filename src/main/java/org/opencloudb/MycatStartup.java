@@ -37,7 +37,8 @@ public final class MycatStartup {
     private static final String dateFormat = "yyyy-MM-dd HH:mm:ss";
 
     public static void main(String[] args) {
-        //use zk ?
+        //use zk ? 
+    	//使用zk
         ZkConfig.instance().initZk();
 
         try {
@@ -46,8 +47,9 @@ public final class MycatStartup {
                 System.out.println(SystemConfig.SYS_HOME + "  is not set.");
                 System.exit(-1);
             }
-            // init
+            // init 初始化日志组件
             MycatServer server = MycatServer.getInstance();
+            //mycat启动前
             server.beforeStart();
 
             // startup
